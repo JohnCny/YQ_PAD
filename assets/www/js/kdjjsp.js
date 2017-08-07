@@ -128,49 +128,54 @@ function cusbc(){
 				}*/
 				zpsc();
 			})
+			
 			$("#xszlxx").click(function() {
-				//kdbcdc();
-			/*	if ($("input[type='radio']").is(':checked')) {
-					$("#xszlxx").attr('disabled',"true");
-					var values =$('input[name="checkbox"]:checked').attr("value").split("@");
-
-					var appId = values[3];
-					var res={};
-					res.appId = appId;
-					res.currentLoc ="cysdrw()";
-					kdbcdc(res);
-				}else{
-					window.wxc.xcConfirm("请选择一行", "warning");
-				}*/
+				aa();
 			})
 }
 
 
 
 /* ********************* 补充调查  ********************* */
-function kdbcdc(){
-	window.scrollTo(0,0);//滚动条回到顶端
-	$("#mainPage").html("<div class='title'><img src='images/back.png' onclick='cusbc()'/>快审通-补充调查</div>"+  
+function aa(){
+	 alert("补充调查");
+	 window.scrollTo(0,0);//滚动条回到顶端
+	    $("#mainPage").html("<div class='title'><img src='images/back.png' onclick='cusbc()'/>快审通-补充调查</div>"+  
 			"<div class='content'>" +
-	"<table class='cpTable khjbxx' style='margin-top:20px;'>"+
-			"<tr>"+                        
-			"<th colspan='4'>客户基本信息</th>"+  
-			"</tr>"+
+			"<table class='cpTable khjbxx' style='margin-top:20px;'>"+
+			
+			"<tr><th colspan='4'>客户基本信息</th></tr>"+ 
 			"<tr>"+
-			"<th>申请人:</th>"+
+			"<th>申请人姓名:</th>"+
 			"<td><input  type='text' value='' disabled='isabled'/></td>"+
+			"<th>申请金额:</th>"+
+			"<td><input  type='text' value='' disabled='isabled'/>&nbsp;元</td>"+
+			"</tr>"+
+			
+			"<tr>"+
+			"<th>贷款期限:</th>"+
+			"<td><input  type='text' value='' disabled='isabled'/></td>"+
+			"<th>还款方式:</th>"+
+			"<td><input  type='text' value='' disabled='isabled'/></td>"+
+			"</tr>"+
+			
+			"<tr><th colspan='4'>个人信息</th></tr>"+ 
+			"<tr>"+
 			"<th>性别:</th>"+
-			"<td><input  type='text' value='' disabled='isabled'/></td>"+
-			"</tr>"+
-			"<tr>"+
-			"<th>年龄:</th>"+
 			"<td><input  type='text' value='' disabled='isabled'/></td>"+
 			"<th>身份证号:</th>"+
 			"<td><input  type='text' value='' disabled='isabled'/></td>"+
 			"</tr>"+
+			
+			
 			"<tr>"+
+			"<th>年龄:</th>"+
+			"<td><input  type='text' value='' disabled='isabled'/></td>"+
 			"<th>手机号:</th>"+
 			"<td><input  type='text' value='' disabled='isabled'/></td>"+
+			"</tr>"+
+			
+			"<tr>"+
 			"<th>婚姻状况:</th>"+
 			"<td><select id='hyzk'>" +
 				"<option value = '未婚'>未婚</option>" +
@@ -178,14 +183,6 @@ function kdbcdc(){
 				"<option value = '离婚'>离婚</option>" +
 				"<option value = '再婚'>再婚</option>" +
 				"</select></td>"+
-			"</tr>"+
-			"<tr>"+
-			"<th>户籍所在地:</th>"+
-			"<td><select id='hyzk'>" +
-			"<option value = '本省'>本省</option>" +
-			"<option value = '本省外地'>本省外地</option>" +
-			"<option value = '外地'>外地</option>" +
-			"</select></td>"+
 			"<th>最高学位学历:</th>"+
 			"<td><select id='hyzk'>" +
 				"<option value = '初中及以下'>初中及以下</option>" +
@@ -193,15 +190,24 @@ function kdbcdc(){
 				"<option value = '大学或以上'>大学或以上</option>" +
 				"</select></td>"+
 			"</tr>"+
-			"<tr>"+                        
-			"<th colspan='4'>家庭资产:</th>"+  
+			
+			"<tr>"+
+			"<th>户籍所在地:</th>"+
+			"<td><select id='hyzk'>" +
+			"<option value = '本省'>本省</option>" +
+			"<option value = '本省外地'>本省外地</option>" +
+			"<option value = '外地'>外地</option>" +
+			"</select></td>"+
 			"</tr>"+
+			
+			"<tr><th colspan='4'>家庭资产:</th></tr>"+  
 			"<tr>"+
 			"<th>自有房产数量:</th>"+
 			"<td><input  type='text' value='' disabled='isabled'/></td>"+
 			"<th>按揭房产数量:</th>"+
 			"<td><input  type='text' value='' disabled='isabled'/></td>"+
 			"</tr>"+
+			
 			"<tr>"+
 			"<th>按揭贷款余额:</th>"+
 			"<td><input  type='text' value='' disabled='isabled'/> &nbsp;元</td>"+
@@ -235,9 +241,7 @@ function kdbcdc(){
 			
 			
 			
-			"<tr>"+                        
-			"<th colspan='4'>家庭状况</th>"+ 
-			"</tr>"+
+			"<tr><th colspan='4'>家庭状况</th></tr>"+ 
 			"<tr>"+  
 			"<th>经济上依赖的人数:</th>"+
 			"<td><input  type='text' value='' /></td>"+
@@ -247,9 +251,10 @@ function kdbcdc(){
 			"<tr>"+
 			"<th>子女教育状况:</th>"+
 			"<td><select id='hyzk'>" +
-			"<option value = '正常'>正常</option>" +
-			"<option value = '不正常'>不正常</option>" +
-			"<option value = '无记录'>无记录</option>" +
+			"<option value = '无子女'>无子女</option>" +
+			"<option value = '上学'>工作</option>" +
+			"<option value = '学龄前'>工作</option>" +
+			"<option value = '工作'>工作</option>" +
 			"</select></td>"+
 			"</tr>"+
 			
@@ -257,13 +262,21 @@ function kdbcdc(){
 			
 			
 			
-			"<tr>"+                        
-			"<th colspan='4'>经营及财务状况</th>"+  
-			"</tr>"+
+			"<tr><th colspan='4'>经营及财务状况</th></tr>"+  
 			"<tr>"+
 			"<th>业务年限:</th>"+
 			"<td><input  type='text' value='' />&nbsp;年</td>"+
+			"<th>年可支配收入:</th>"+
+			"<td><input  type='text' value='' />&nbsp;元</td>"+
 			"</tr>"+
+			
+			"<tr>"+
+			"<th>主营业务收入:</th>"+
+			"<td><input  type='text' value='' /> &nbsp;元</td>"+
+			"<th>其他工作收入:</th>"+
+			"<td><input  type='text' value='' />&nbsp;元</td>"+
+			"</tr>"+    
+			
 			"<tr>"+
 			"<th>流动资产:</th>"+
 			"<td><input  type='text' value='' /> &nbsp;元</td>"+
@@ -282,32 +295,20 @@ function kdbcdc(){
 			"<th>短期负债:</th>"+
 			"<td><input  type='text' value='' /> &nbsp;元</td>"+
 			"<th>负债总计:</th>"+
-			"<td><input  type='text' value='' />&nbsp;元</td>"+
+			"<td><input  type='text' value='' /> &nbsp;元</td>"+
 			"</tr>"+    
 			
 			"<tr>"+
 			"<th>所有者权益:</th>"+
-			"<td><input  type='text' value='' /> &nbsp;元</td>"+
-			"</tr>"+    
-			
-			"<tr>"+
-			"<th>主营业务收入:</th>"+
-			"<td><input  type='text' value='' /> &nbsp;元</td>"+
-			"<th>其他工作年收入:</th>"+
 			"<td><input  type='text' value='' />&nbsp;元</td>"+
-			"</tr>"+    
-			
-			"<tr>"+
 			"<th>私人用途分期付款:</th>"+
 			"<td><input  type='text' value='' /> &nbsp;元</td>"+
-			"<th>年可支配收入:</th>"+
-			"<td><input  type='text' value='' />&nbsp;元</td>"+
 			"</tr>"+  
 
 			"</table>"+
 			"<p>" +
-			"<input type='button' class='btn btn-primary btn-large' value='提交' id='save' />" +
-			"<input type='button' class='btn btn-large' value='返回' onclick='cusbc()'/>" +
+			"<input type='button' class='btn btn-primary btn-large' value='查看文件资料' id='save' />" +
+			"<input type='button' class='btn btn-large' value='返回' onclick='kssp()'/>" +
 			"</p>"+
 	"</div>");
 	$(".right").hide();
@@ -433,6 +434,8 @@ function zpsc(){
 
 
 /********************** 快审  **********************/
+
+//快审审批信息查询
 function kssp(){
 	window.scrollTo(0,0);//滚动条回到顶端	
 	var userId = window.sessionStorage.getItem("userId");
@@ -627,7 +630,6 @@ function kssp(){
 
 //补充调查资料查看
 function budcMethod(id){
-		alert("补充调查资料查看:"+id);
 		var selectUrl = "/ipad/ks/selectSuppleMentInformation.json";
     	$.ajax({
 		url:wsHost + selectUrl,
@@ -772,37 +774,37 @@ function budcMethod(id){
 			
 			"<tr>"+
 			"<th>主营业务收入:</th>"+
-			"<td><input  type='text' value='' /> &nbsp;元</td>"+
+			"<td><input  type='text' value='"+obj.result.annualIncomeSpouse+"' /> &nbsp;元</td>"+
 			"<th>其他工作收入:</th>"+
-			"<td><input  type='text' value='' />&nbsp;元</td>"+
+			"<td><input  type='text' value='"+obj.result.annualIncomeSpouse+"' />&nbsp;元</td>"+
 			"</tr>"+    
 			
 			"<tr>"+
 			"<th>流动资产:</th>"+
-			"<td><input  type='text' value='' /> &nbsp;元</td>"+
+			"<td><input  type='text' value='"+obj.result.annualIncomeSpouse+"' /> &nbsp;元</td>"+
 			"<th>存货:</th>"+
-			"<td><input  type='text' value='' />&nbsp;元</td>"+
+			"<td><input  type='text' value='"+obj.result.annualIncomeSpouse+"' />&nbsp;元</td>"+
 			"</tr>"+    
 			
 			"<tr>"+
 			"<th>固定资产:</th>"+
-			"<td><input  type='text' value='' /> &nbsp;元</td>"+
+			"<td><input  type='text' value='"+obj.result.annualIncomeSpouse+"' /> &nbsp;元</td>"+
 			"<th>资产总计:</th>"+
-			"<td><input  type='text' value='' />&nbsp;元</td>"+
+			"<td><input  type='text' value='"+obj.result.annualIncomeSpouse+"' />&nbsp;元</td>"+
 			"</tr>"+    
 			
 			"<tr>"+
 			"<th>短期负债:</th>"+
-			"<td><input  type='text' value='' /> &nbsp;元</td>"+
+			"<td><input  type='text' value='"+obj.result.annualIncomeSpouse+"' /> &nbsp;元</td>"+
 			"<th>负债总计:</th>"+
-			"<td><input  type='text' value='' /> &nbsp;元</td>"+
+			"<td><input  type='text' value='"+obj.result.annualIncomeSpouse+"' /> &nbsp;元</td>"+
 			"</tr>"+    
 			
 			"<tr>"+
 			"<th>所有者权益:</th>"+
-			"<td><input  type='text' value='' />&nbsp;元</td>"+
+			"<td><input  type='text' value='"+obj.result.annualIncomeSpouse+"' />&nbsp;元</td>"+
 			"<th>私人用途分期付款:</th>"+
-			"<td><input  type='text' value='' /> &nbsp;元</td>"+
+			"<td><input  type='text' value='"+obj.result.annualIncomeSpouse+"' /> &nbsp;元</td>"+
 			"</tr>"+  
 
 			"</table>"+
@@ -817,11 +819,8 @@ function budcMethod(id){
 	})
 }
 
-/********************** 快审  **********************/
 
-
-
-/********************** 快审审批界面  **********************/
+//快审审批界面
 function kdbcdc(res){
 	window.scrollTo(0,0);//滚动条回到顶端
 	$("#mainPage").html("<div class='title'><img src='images/back.png' onclick='kssp()'/>快审审批界面</div>"+  
@@ -910,4 +909,4 @@ function kdbcdc(res){
 				}
 	})
 }
-/********************** 快审审批界面  **********************/
+/********************** 快审  **********************/
