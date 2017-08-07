@@ -138,11 +138,19 @@ input[type=button].next{float:right;margin:15px 40px 0 0;}
 
 .imgbox{float:left;width:95%;margin-left:2.5%;margin-top:20px;clear:both;}
 .content .zz{position:absolute;width:350px;height:350px;background:rgba(0,0,0,0.5);display:none;}
+
 .content .zz img{width:30px;height:30px;float:right;margin-right:20px;margin-top:20px;}
+.content .Bigzz{width:182px;height:182px;}
+.content .Bigzz img{width:30px;height:30px;}
 .images{margin:5px;float:left;display:inline-block;}
 .images img{width:350px;height:350px;}
 
-
+.imgBox{width:95%;margin:0 auto;float:left;margin-left:2.5%;}
+.imgBox img{float:left;width:160px;height:160px;margin-right:10px;margin-bottom:10px;padding:10px;border:1px solid #ddd;background:#fff}
+.imgBox .more{display:inline-block;float:left;width:180px;height:180px;border:1px solid #ddd;margin-right:10px;margin-bottom:10px;background:#f9f9f9}
+.imgBox .more p{text-align:center;}
+.imgBox .more .imgTitle{border-top:4px solid #4e85bd;line-height:40px;border-bottom:1px solid #ddd;background:#fff}
+.imgBox .more img{width:80px;height:80px;float:none;margin:0 auto;margin-top:15px;border:none;background:#f9f9f9}
 
 /*<!--�ͻ�����-->*/
 .box{width:9em;height:9em;border-radius:1em;float:left;margin-left:1em;margin-top:1em;margin-bottom:1em;text-align:center;}
