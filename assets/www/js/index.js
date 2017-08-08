@@ -178,7 +178,7 @@ function changeNav(obj,num){
     $(obj).css("background","#fff");//背景
     $(".left .nav .li span").css("color","#858fa6");
     $(obj).find("span").css("color","#298dd7");//文字
-    for(i=1;i<6;i++){
+    for(i=1;i<3;i++){
         images[i].src="images/"+i+".png";
     }
     images[num].src="images/"+num+"_b.png";
