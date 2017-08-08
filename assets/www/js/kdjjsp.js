@@ -146,9 +146,16 @@ function cusbc(){
 				//zpsc();
 			})
 			$("#xszlxx").click(function() {
-				kdbcdc();
-		
-				
+				if ($("input[type='radio']").is(':checked')) {
+					var values =$('input[name="checkbox"]:checked').attr("value").split("@");
+					var res ={};
+					res.appId = values[3];
+					aa(res);
+				}else{
+//					alert("请选择一行");
+					window.wxc.xcConfirm("请选择一行", "warning");
+				}
+
 			})
 		}})
 }
@@ -156,108 +163,125 @@ function cusbc(){
 
 
 /* ********************* 补充调查  ********************* */
-function kdbcdc(){
-	window.scrollTo(0,0);//滚动条回到顶端
-	$("#mainPage").html("<div class='title'><img src='images/back.png' onclick='cusbc()'/>快审通-补充调查</div>"+  
-			"<div class='content'>" +
-	"<table class='cpTable khjbxx' style='margin-top:20px;'>"+
-			"<tr>"+                        
-			"<th colspan='4'>客户基本信息</th>"+  
-			"</tr>"+
+
+
+function aa(res){
+	  window.scrollTo(0,0);//滚动条回到顶端
+	    $("#mainPage").html("<div class='title'><img src='images/back.png' onclick='cusbc()'/>快审通-补充调查</div>"+  
+			"<form class='content' id='bcdcForm'>" +
+			"<table  class='cpTable khjbxx' style='margin-top:20px;'>"+
+			
+			"<tr><th colspan='4'>客户基本信息</th></tr>"+ 
 			"<tr>"+
-			"<th>申请人:</th>"+
+			"<th>申请人姓名:</th>"+
+			"<td><input  type='hidden' value='"+res.appId+"' name='applyId'/><input  type='text' value='' disabled='isabled'/></td>"+
+			"<th>申请金额:</th>"+
+			"<td><input  type='text' value='' disabled='isabled'/>&nbsp;元</td>"+
+			"</tr>"+
+			
+			"<tr>"+
+			"<th>贷款期限:</th>"+
 			"<td><input  type='text' value='' disabled='isabled'/></td>"+
+			"<th>还款方式:</th>"+
+			"<td><input  type='text' value='' disabled='isabled'/></td>"+
+			"</tr>"+
+			
+			"<tr><th colspan='4'>个人信息</th></tr>"+ 
+			"<tr>"+
 			"<th>性别:</th>"+
-			"<td><input  type='text' value='' disabled='isabled'/></td>"+
-			"</tr>"+
-			"<tr>"+
-			"<th>年龄:</th>"+
 			"<td><input  type='text' value='' disabled='isabled'/></td>"+
 			"<th>身份证号:</th>"+
 			"<td><input  type='text' value='' disabled='isabled'/></td>"+
 			"</tr>"+
+			
+			
 			"<tr>"+
+			"<th>年龄:</th>"+
+			"<td><input  type='text' value='' disabled='isabled'/></td>"+
 			"<th>手机号:</th>"+
 			"<td><input  type='text' value='' disabled='isabled'/></td>"+
+			"</tr>"+
+			
+			"<tr>"+
 			"<th>婚姻状况:</th>"+
-			"<td><select id='hyzk'>" +
+			"<td><select id='hyzk' name='maritalStatus'>" +
 				"<option value = '未婚'>未婚</option>" +
 				"<option value = '已婚'>已婚</option>" +
 				"<option value = '离婚'>离婚</option>" +
 				"<option value = '再婚'>再婚</option>" +
 				"</select></td>"+
-			"</tr>"+
-			"<tr>"+
-			"<th>户籍所在地:</th>"+
-			"<td><select id='hyzk'>" +
-			"<option value = '本省'>本省</option>" +
-			"<option value = '本省外地'>本省外地</option>" +
-			"<option value = '外地'>外地</option>" +
-			"</select></td>"+
 			"<th>最高学位学历:</th>"+
-			"<td><select id='hyzk'>" +
+			"<td><select id='hyzk' name='highEdu'>" +
 				"<option value = '初中及以下'>初中及以下</option>" +
 				"<option value = '高中或技校'>高中或技校</option>" +
 				"<option value = '大学或以上'>大学或以上</option>" +
 				"</select></td>"+
 			"</tr>"+
-			"<tr>"+                        
-			"<th colspan='4'>家庭资产:</th>"+  
+			
+			"<tr>"+
+			"<th>户籍所在地:</th>"+
+			"<td><select id='hyzk' name='domicile'>" +
+			"<option value = '本省'>本省</option>" +
+			"<option value = '本省外地'>本省外地</option>" +
+			"<option value = '外地'>外地</option>" +
+			"</select></td>"+
 			"</tr>"+
+			
+			"<tr><th colspan='4'>家庭资产:</th></tr>"+  
 			"<tr>"+
 			"<th>自有房产数量:</th>"+
-			"<td><input  type='text' value='' disabled='isabled'/></td>"+
+			"<td><input  type='text' value='0' name='ownHouses' readonly/></td>"+
 			"<th>按揭房产数量:</th>"+
-			"<td><input  type='text' value='' disabled='isabled'/></td>"+
+			"<td><input  type='text' value='0' name='mortgageHouses' readonly/></td>"+
 			"</tr>"+
+			
 			"<tr>"+
 			"<th>按揭贷款余额:</th>"+
-			"<td><input  type='text' value='' disabled='isabled'/> &nbsp;元</td>"+
+			"<td><input  type='text' value='0' name='mortgageBalamt' readonly/> &nbsp;元</td>"+
 			"<th>自有车辆数量:</th>"+
-			"<td><input  type='text' value='' disabled='isabled'/></td>"+
+			"<td><input  type='text' value='0' name='ownVehicles' readonly/></td>"+
 			"</tr>"+
 			"<tr>"+                        
 			"<th colspan='4'>征信状况:</th>"+  	
 			"</tr>"+
 			"<tr>"+
 			"<th >信用状况:</th>"+
-			"<td><select id='hyzk'>" +
+			"<td><select id='hyzk' name='creditStatus'>" +
 			"<option value = '正常'>正常</option>" +
 			"<option value = '不正常'>不正常</option>" +
 			"<option value = '无记录'>无记录</option>" +
 			"</select></td>"+
 			"<th>信用逾期次数:</th>"+
-			"<td><input  type='text' value='' disabled='isabled'/></td>"+
+			"<td><input  type='text' value='0' name='creditOverdueTimes' readonly/></td>"+
 			"</tr>"+
 			
 			"<tr>"+
 			"<th>贷款逾期次数:</th>"+
-			"<td><input  type='text' value='' disabled='isabled'/></td>"+
+			"<td><input  type='text' value='0' name='loanOverdueTimes' readonly/></td>"+
 			"<th>贷款余额:</th>"+
-			"<td><input  type='text' value='' disabled='isabled'/>&nbsp;元</td>"+
+			"<td><input  type='text' value='0' name='loanBalamt' readonly/>&nbsp;元</td>"+
 			"</tr>"+
 			"<tr>"+
 			"<th>担保余额:</th>"+
-			"<td><input  type='text' value='' disabled='isabled'/>&nbsp;元</td>"+
+			"<td><input  type='text' value='0' name='guaranteed' readonly/>&nbsp;元</td>"+
 			"</tr>"+
 			
 			
 			
-			"<tr>"+                        
-			"<th colspan='4'>家庭状况</th>"+ 
-			"</tr>"+
+			"<tr><th colspan='4'>家庭状况</th></tr>"+ 
 			"<tr>"+  
 			"<th>经济上依赖的人数:</th>"+
-			"<td><input  type='text' value='' /></td>"+
+			"<td><input  type='text' value='0' name='numOfEcoDepend' /></td>"+
 			"<th>配偶年收入:</th>"+
-			"<td><input  type='text' value='' />&nbsp;元</td>"+
+			"<td><input  type='text' value='0' name='annualIncomeSpouse' />&nbsp;元</td>"+
 			"</tr>"+
 			"<tr>"+
 			"<th>子女教育状况:</th>"+
-			"<td><select id='hyzk'>" +
-			"<option value = '正常'>正常</option>" +
-			"<option value = '不正常'>不正常</option>" +
-			"<option value = '无记录'>无记录</option>" +
+			"<td><select id='hyzk' name='childEdu'>" +
+			"<option value = '无子女'>无子女</option>" +
+			"<option value = '上学'>工作</option>" +
+			"<option value = '学龄前'>工作</option>" +
+			"<option value = '工作'>工作</option>" +
 			"</select></td>"+
 			"</tr>"+
 			
@@ -265,64 +289,74 @@ function kdbcdc(){
 			
 			
 			
-			"<tr>"+                        
-			"<th colspan='4'>经营及财务状况</th>"+  
-			"</tr>"+
+			"<tr><th colspan='4'>经营及财务状况</th></tr>"+  
 			"<tr>"+
 			"<th>业务年限:</th>"+
-			"<td><input  type='text' value='' />&nbsp;年</td>"+
+			"<td><input  type='text' value='0' name='serviceLife' />&nbsp;年</td>"+
+			"<th>年可支配收入:</th>"+
+			"<td><input  type='text' value='0' name='annualDisIncome' />&nbsp;元</td>"+
 			"</tr>"+
+			
+			"<tr>"+
+			"<th>主营业务收入:</th>"+
+			"<td><input  type='text' value='0' name='mainBusinessIncome' /> &nbsp;元</td>"+
+			"<th>其他工作收入:</th>"+
+			"<td><input  type='text' value='0' name='otherImcome' />&nbsp;元</td>"+
+			"</tr>"+    
+			
 			"<tr>"+
 			"<th>流动资产:</th>"+
-			"<td><input  type='text' value='' /> &nbsp;元</td>"+
+			"<td><input  type='text' value='0' name='currentAssets' /> &nbsp;元</td>"+
 			"<th>存货:</th>"+
-			"<td><input  type='text' value='' />&nbsp;元</td>"+
+			"<td><input  type='text' value='0' name='stock' />&nbsp;元</td>"+
 			"</tr>"+    
 			
 			"<tr>"+
 			"<th>固定资产:</th>"+
-			"<td><input  type='text' value='' /> &nbsp;元</td>"+
+			"<td><input  type='text' value='0' name='fixedAssets' /> &nbsp;元</td>"+
 			"<th>资产总计:</th>"+
-			"<td><input  type='text' value='' />&nbsp;元</td>"+
+			"<td><input  type='text' value='0' name='totalAssets' />&nbsp;元</td>"+
 			"</tr>"+    
 			
 			"<tr>"+
 			"<th>短期负债:</th>"+
-			"<td><input  type='text' value='' /> &nbsp;元</td>"+
+			"<td><input  type='text' value='0' name='shortTermLiab' /> &nbsp;元</td>"+
 			"<th>负债总计:</th>"+
-			"<td><input  type='text' value='' />&nbsp;元</td>"+
+			"<td><input  type='text' value='0' name='totalLiab' /> &nbsp;元</td>"+
 			"</tr>"+    
 			
 			"<tr>"+
 			"<th>所有者权益:</th>"+
-			"<td><input  type='text' value='' /> &nbsp;元</td>"+
-			"</tr>"+    
-			
-			"<tr>"+
-			"<th>主营业务收入:</th>"+
-			"<td><input  type='text' value='' /> &nbsp;元</td>"+
-			"<th>其他工作年收入:</th>"+
-			"<td><input  type='text' value='' />&nbsp;元</td>"+
-			"</tr>"+    
-			
-			"<tr>"+
+			"<td><input  type='text' value='0' name='ownedEqu' />&nbsp;元</td>"+
 			"<th>私人用途分期付款:</th>"+
-			"<td><input  type='text' value='' /> &nbsp;元</td>"+
-			"<th>年可支配收入:</th>"+
-			"<td><input  type='text' value='' />&nbsp;元</td>"+
+			"<td><input  type='text' value='0' name='payPrivateUse' /> &nbsp;元</td>"+
 			"</tr>"+  
 
 			"</table>"+
 			"<p>" +
-			"<input type='button' class='btn btn-primary btn-large' value='提交' id='save' />" +
-			"<input type='button' class='btn btn-large' value='返回' onclick='cusbc()'/>" +
+			"<input type='button' class='btn btn-primary btn-large' value='查看文件资料' id='save' onclick='saveBcdc()'/>" +
+			"<input type='button' class='btn btn-large' value='返回' onclick='kssp()'/>" +
 			"</p>"+
-	"</div>");
+	"</form");
 	$(".right").hide();
 	$("#mainPage").show();
 }
 
-
+function saveBcdc(){
+	alert($('#bcdcForm').serialize())
+	var url= "/ipad/intopieces/saveBcdc.json";
+	$.ajax({ 
+         url : wsHost + url,  
+         type : "POST",  
+		 data : $('#bcdcForm').serialize(), 
+         success : function(result) { 
+         	alert(111)
+         },  
+         error : function(result) {  
+         	alert(222)
+         }  
+     });  
+}
 
 
 
