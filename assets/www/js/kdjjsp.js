@@ -1,17 +1,26 @@
 /* ********************* maoya 开始  ********************* */
+//加载提额管理界面
 function kdjj(){
     var htmDiv="";
+    var htmlDiv="";
+   
+	// 客户经理
+	if(window.sessionStorage.getItem("userType")==1){
+       htmlDiv = "<div class='box shspp1' onclick='cusbc()'><img src='images/shsp1.png'/>" +                            
+				 "<span>提额申请</span>"+
+				 "</div>"
+	}
+	
+	 // 审批岗
     if(window.sessionStorage.getItem("userType")==3){
        htmDiv = "<div class='box shspp1' onclick='kssp()'><img src='images/shsp2.png'/>" +
-				"<span>快审</span>"+
+				"<span>提额审批</span>"+
 				"</div>"
 	}
+	
 	window.scrollTo(0,0);//滚动条回到顶端
 	$("#mainPage").html("<div class='title'>快审通-待调查进件</div>"+  
-			"<div class='content'>" +
-			"<div class='box shspp1' onclick='cusbc()'><img src='images/shsp1.png'/>" +                            
-			"<span>补充申请客户资料</span>"+
-			"</div>"+ htmDiv +
+			"<div class='content'>" + htmlDiv + htmDiv +
 	"</div>");
 	$(".right").hide();
 	$("#mainPage").show();
@@ -46,13 +55,6 @@ function cusbc(){
 		success: function (json){
 			var obj = $.evalJSON(json);
 			for(var i = 0;i<obj.size;i++){
-				/*if((obj.result[i].APPLY_ID=="" || obj.result[i].APPLY_ID==null) && (obj.result[i].APPLY_ID1=="" || obj.result[i].APPLY_ID1==null)){
-					td="待调查"	
-				}else if((obj.result[i].APPLY_ID!="" && obj.result[i].APPLY_ID!=null) && (obj.result[i].APPLY_ID1!="" && obj.result[i].APPLY_ID1!=null)){
-					td="调查完成"	
-				}else{
-					td="正在调查"	
-				}*/
 				
 				if(obj.result[i].LOAN_STATE=="0"){
 					td="待调查";
@@ -89,6 +91,9 @@ function cusbc(){
 			window.scrollTo(0,0);//滚动条回到顶端
 			$("#mainPage").html("<div class='title'><img src='images/back.png' onclick='kdjj()'/>快审通-新申请客户</div>"+  
 					"<div class='content' >"+ 
+					"<p style='margin-bottom:10px;margin-top:10px;'>"+
+					"<span style='float:left; margin-top:10px; margin-bottom:10px; margin-left:30px;'>客户姓名:<input type ='text' id='chineseName'/></span>"+
+					"<input type='button' style='margin-bottom:10px; margin-top:10px;' class='btn btn-large btn-primary next' value='筛选' id ='sure'/></p>"+
 					"<table id='cslb' class='cpTable jjTable' style='text-align:center;'>"+
 					head+result[page]+
 					"</table>"+
@@ -100,14 +105,58 @@ function cusbc(){
 					"<input type='button' class='btn btn-large' value='返回' onclick='kdjj()'/></p>"+
 			"</div>");
 			$(".right").hide();
-			$("#mainPage").show();   
+			$("#mainPage").show();
+			
+			
+			// 筛选
+			$("#sure").click(function(){
+			  if($("#chineseName").val()==""){
+			  	window.wxc.xcConfirm("查询条件客户姓名必输", "warning");
+			  	return;
+			  }
+			 	$.ajax({
+					url:wsHost + sdrwurl,
+					type: "GET",
+					dataType:'json',
+					data:{
+						chineseName:$("#chineseName").val(),
+					},
+					success: function (json) {
+						obj = $.evalJSON(json);
+						var booo="";
+						for(var i = 0;i<obj.size;i++){
+							if(obj.result[i].loanState=="0"){
+								obj.result[i].loanState="待调查";
+							}else if(obj.result[i].loanState=="1"){
+								obj.result[i].loanState="补充调查";
+							}else if(obj.result[i].loanState=="2"){
+								obj.result[i].loanState="快审中";
+							}else if(obj.result[i].loanState=="3"){
+								obj.result[i].loanState="通过";
+							}else if(obj.result[i].loanState=="4"){
+								obj.result[i].loanState="拒绝";
+							}
+							booo=booo+"<tr onclick='check(this)'><td><span class='radio'> <input type='radio' name='checkbox' value='"+obj.result[i].ID+"@"+
+							obj.result[i].CUSTOMER_NAME+"@"+obj.result[i].CARD_ID+"@"+obj.result[i].PHONE_NO+
+							"@"+obj.result[i].APPLY_AMT+"@"+obj.result[i].LOAN_TERM+"'/>"+"</span></td>"+  
+							"<td>"+obj.result[i].CUSTOMER_NAME+"</td>"+
+							"<td>"+obj.result[i].CARD_ID+"</td>"+
+							"<td>"+obj.result[i].PHONE_NO+"</td>"+
+							"<td>"+obj.result[i].APPLY_AMT+"</td>"+
+							"<td>"+obj.result[i].LOAN_TERM+"</td>"+
+							"<td>"+obj.result[i].APPLY_TIME+"</td>"+			
+							"<td>"+td+"</td></tr>"
+						}
+							$("#cslb").html(head+booo);
+						}
+					})
+			})   
 
 			$("#xyy").click(function(){
 				page=page+1;
 				if(result[page]){
 					$("#cslb").html(head+result[page]);
 				}else{
-//					alert("当前已经是最后一页");
 					window.wxc.xcConfirm("当前已经是最后一页", "info");
 					page=page-1;
 				}
@@ -117,7 +166,6 @@ function cusbc(){
 				if(result[page]){
 					$("#cslb").html(head+result[page]);
 				}else{
-//					alert("当前已经是第一页");
 					window.wxc.xcConfirm("当前已经是第一页", "info");
 					page = page+1;
 				}
@@ -143,16 +191,21 @@ function cusbc(){
 				}else{
 					window.wxc.xcConfirm("请选择一行", "error");
 				}
-				//zpsc();
 			})
 			$("#xszlxx").click(function() {
 				if ($("input[type='radio']").is(':checked')) {
 					var values =$('input[name="checkbox"]:checked').attr("value").split("@");
 					var res ={};
-					res.appId = values[3];
+					res.id = values[0];
+					res.appId = values[0];
+					res.name = values[1];
+					res.cardId =values[2];
+					res.phoneNo = values[3];
+					res.applyAmt = values[4];
+					res.loanTerm = values[5];
+					res.applyTime = values[6];
 					aa(res);
 				}else{
-//					alert("请选择一行");
 					window.wxc.xcConfirm("请选择一行", "warning");
 				}
 
@@ -163,8 +216,6 @@ function cusbc(){
 
 
 /* ********************* 补充调查  ********************* */
-
-
 function aa(res){
 	  window.scrollTo(0,0);//滚动条回到顶端
 	    $("#mainPage").html("<div class='title'><img src='images/back.png' onclick='cusbc()'/>快审通-补充调查</div>"+  
@@ -174,14 +225,14 @@ function aa(res){
 			"<tr><th colspan='4'>客户基本信息</th></tr>"+ 
 			"<tr>"+
 			"<th>申请人姓名:</th>"+
-			"<td><input  type='hidden' value='"+res.appId+"' name='applyId'/><input  type='text' value='' disabled='isabled'/></td>"+
+			"<td><input  type='hidden' value='"+res.appId+"' name='applyId'/><input  type='text' value='"+res.name+"' disabled='isabled'/></td>"+
 			"<th>申请金额:</th>"+
-			"<td><input  type='text' value='' disabled='isabled'/>&nbsp;元</td>"+
+			"<td><input  type='text' value='"+res.applyAmt+"' disabled='isabled'/>&nbsp;元</td>"+
 			"</tr>"+
 			
 			"<tr>"+
 			"<th>贷款期限:</th>"+
-			"<td><input  type='text' value='' disabled='isabled'/></td>"+
+			"<td><input  type='text' value='"+res.loanTerm+"' disabled='isabled'/></td>"+
 			"<th>还款方式:</th>"+
 			"<td><input  type='text' value='' disabled='isabled'/></td>"+
 			"</tr>"+
@@ -191,7 +242,7 @@ function aa(res){
 			"<th>性别:</th>"+
 			"<td><input  type='text' value='' disabled='isabled'/></td>"+
 			"<th>身份证号:</th>"+
-			"<td><input  type='text' value='' disabled='isabled'/></td>"+
+			"<td><input  type='text' value='"+res.cardId+"' disabled='isabled'/></td>"+
 			"</tr>"+
 			
 			
@@ -199,47 +250,47 @@ function aa(res){
 			"<th>年龄:</th>"+
 			"<td><input  type='text' value='' disabled='isabled'/></td>"+
 			"<th>手机号:</th>"+
-			"<td><input  type='text' value='' disabled='isabled'/></td>"+
+			"<td><input  type='text' value='"+res.phoneNo+"' disabled='isabled'/></td>"+
 			"</tr>"+
 			
 			"<tr>"+
 			"<th>婚姻状况:</th>"+
 			"<td><select id='hyzk' name='maritalStatus'>" +
-				"<option value = '未婚'>未婚</option>" +
-				"<option value = '已婚'>已婚</option>" +
-				"<option value = '离婚'>离婚</option>" +
-				"<option value = '再婚'>再婚</option>" +
+				"<option value = '0'>未婚</option>" +
+				"<option value = '1'>已婚</option>" +
+				"<option value = '2'>离婚</option>" +
+				"<option value = '3'>再婚</option>" +
 				"</select></td>"+
 			"<th>最高学位学历:</th>"+
 			"<td><select id='hyzk' name='highEdu'>" +
-				"<option value = '初中及以下'>初中及以下</option>" +
-				"<option value = '高中或技校'>高中或技校</option>" +
-				"<option value = '大学或以上'>大学或以上</option>" +
+				"<option value = '0'>初中及以下</option>" +
+				"<option value = '1'>高中或技校</option>" +
+				"<option value = '2'>大学或以上</option>" +
 				"</select></td>"+
 			"</tr>"+
 			
 			"<tr>"+
 			"<th>户籍所在地:</th>"+
 			"<td><select id='hyzk' name='domicile'>" +
-			"<option value = '本省'>本省</option>" +
-			"<option value = '本省外地'>本省外地</option>" +
-			"<option value = '外地'>外地</option>" +
+			"<option value = '0'>本省</option>" +
+			"<option value = '1'>本省外地</option>" +
+			"<option value = '2'>外地</option>" +
 			"</select></td>"+
 			"</tr>"+
 			
 			"<tr><th colspan='4'>家庭资产:</th></tr>"+  
 			"<tr>"+
 			"<th>自有房产数量:</th>"+
-			"<td><input  type='text' value='0' name='ownHouses' readonly/></td>"+
+			"<td><input  type='text' value='0' name='ownHouses' /></td>"+
 			"<th>按揭房产数量:</th>"+
-			"<td><input  type='text' value='0' name='mortgageHouses' readonly/></td>"+
+			"<td><input  type='text' value='0' name='mortgageHouses' /></td>"+
 			"</tr>"+
 			
 			"<tr>"+
 			"<th>按揭贷款余额:</th>"+
-			"<td><input  type='text' value='0' name='mortgageBalamt' readonly/> &nbsp;元</td>"+
+			"<td><input  type='text' value='0' name='mortgageBalamt' /> &nbsp;元</td>"+
 			"<th>自有车辆数量:</th>"+
-			"<td><input  type='text' value='0' name='ownVehicles' readonly/></td>"+
+			"<td><input  type='text' value='0' name='ownVehicles' /></td>"+
 			"</tr>"+
 			"<tr>"+                        
 			"<th colspan='4'>征信状况:</th>"+  	
@@ -247,23 +298,23 @@ function aa(res){
 			"<tr>"+
 			"<th >信用状况:</th>"+
 			"<td><select id='hyzk' name='creditStatus'>" +
-			"<option value = '正常'>正常</option>" +
-			"<option value = '不正常'>不正常</option>" +
-			"<option value = '无记录'>无记录</option>" +
+			"<option value = '0'>正常</option>" +
+			"<option value = '1'>不正常</option>" +
+			"<option value = '2'>无记录</option>" +
 			"</select></td>"+
 			"<th>信用逾期次数:</th>"+
-			"<td><input  type='text' value='0' name='creditOverdueTimes' readonly/></td>"+
+			"<td><input  type='text' value='0' name='creditOverdueTimes' /></td>"+
 			"</tr>"+
 			
 			"<tr>"+
 			"<th>贷款逾期次数:</th>"+
-			"<td><input  type='text' value='0' name='loanOverdueTimes' readonly/></td>"+
+			"<td><input  type='text' value='0' name='loanOverdueTimes' /></td>"+
 			"<th>贷款余额:</th>"+
-			"<td><input  type='text' value='0' name='loanBalamt' readonly/>&nbsp;元</td>"+
+			"<td><input  type='text' value='0' name='loanBalamt' />&nbsp;元</td>"+
 			"</tr>"+
 			"<tr>"+
 			"<th>担保余额:</th>"+
-			"<td><input  type='text' value='0' name='guaranteed' readonly/>&nbsp;元</td>"+
+			"<td><input  type='text' value='0' name='guaranteed' />&nbsp;元</td>"+
 			"</tr>"+
 			
 			
@@ -278,13 +329,12 @@ function aa(res){
 			"<tr>"+
 			"<th>子女教育状况:</th>"+
 			"<td><select id='hyzk' name='childEdu'>" +
-			"<option value = '无子女'>无子女</option>" +
-			"<option value = '上学'>工作</option>" +
-			"<option value = '学龄前'>工作</option>" +
-			"<option value = '工作'>工作</option>" +
+			"<option value = '0'>无子女</option>" +
+			"<option value = '1'>上学</option>" +
+			"<option value = '2'>学龄前</option>" +
+			"<option value = '3'>工作</option>" +
 			"</select></td>"+
 			"</tr>"+
-			
 			
 			
 			
@@ -334,28 +384,41 @@ function aa(res){
 
 			"</table>"+
 			"<p>" +
-			"<input type='button' class='btn btn-primary btn-large' value='查看文件资料' id='save' onclick='saveBcdc()'/>" +
-			"<input type='button' class='btn btn-large' value='返回' onclick='kssp()'/>" +
+			"<input type='button' class='btn btn-primary btn-large' value='上传文件资料' id='uploadData'/>" +
+			"<input type='button' class='btn btn-primary btn-large' value='提交' id='save' onclick='saveBcdc()'/>" +
+			"<input type='button' class='btn btn-large' value='返回' onclick='cusbc()'/>" +
 			"</p>"+
 	"</form");
 	$(".right").hide();
 	$("#mainPage").show();
+	
+	$("#uploadData").click(function() {
+		ksczp(res)
+	});
 }
 
 function saveBcdc(){
-	alert($('#bcdcForm').serialize())
-	var url= "/ipad/intopieces/saveBcdc.json";
-	$.ajax({ 
-         url : wsHost + url,  
-         type : "POST",  
-		 data : $('#bcdcForm').serialize(), 
-         success : function(result) { 
-         	alert(111)
-         },  
-         error : function(result) {  
-         	alert(222)
-         }  
-     });  
+	//alert($('#bcdcForm').serialize())
+	window.wxc.xcConfirm("确定要提交审批吗?", "confirm",{onOk:function(){
+		var url= "/ipad/intopieces/saveBcdc.json";
+		$.ajax({ 
+	         url : wsHost + url,  
+	         type : "POST",  
+			 data : $('#bcdcForm').serialize(), 
+	         success : function(result) {
+	         	var objs = $.evalJSON(result); 
+	         	if(objs.result.status == 'fail'){
+	        		window.wxc.xcConfirm(objs.result.reason, "error");
+	        	}else{
+	        		window.wxc.xcConfirm("保存成功", "info");
+	         		cusbc()
+	        	}
+	         },  
+	         error : function(result) {  
+	         	window.wxc.xcConfirm("保存失败", "error");
+	         }  
+	     });  
+     }});
 }
 
 
@@ -432,10 +495,11 @@ function sHistory(id){
 			$("#mainPage").show();   
 
 			$("#xszlxx").click(function() {
-				bcdcckbs(id);
+				//bcdcckbs(id);
+				budcMethod(id,"1");
 			});
 			$("#xsyxzl").click(function() {
-				HistoryIma(id);
+				HistoryIma(id,"1");
 			});
 		}})
 }
@@ -769,7 +833,7 @@ function kssp(){
 				if ($("input[type='radio']").is(':checked')) {
 				    var values =$('input[name="checkbox"]:checked').attr("value").split("@");
 					var id = values[0];
-				   	budcMethod(id);
+				   	budcMethod(id,"2");
 				}else{
 					window.wxc.xcConfirm("请选择一行", "warning");
 				}
@@ -781,7 +845,7 @@ function kssp(){
 				    var id  =$('input[name="checkbox"]:checked').attr("value");
 				    var values =$('input[name="checkbox"]:checked').attr("value").split("@");
 					var id = values[0];
-					HistoryIma(id);
+					HistoryIma(id,"2");
 				}else{
 					window.wxc.xcConfirm("请选择一行", "warning");
 				}
@@ -814,7 +878,14 @@ function kssp(){
 }
 
 //补充调查资料查看
-function budcMethod(id){
+function budcMethod(id,type){
+		var body="";
+        if(type == "1"){
+          body = "<div><p><input type='button' class='btn btn-large' value='返回' id ='re'><p></div>"
+        }else if (type == "2"){
+           body = "<div><p><input type='button' class='btn btn-large' value='返回' onclick='kssp()'/><p></div>"
+        }
+        
 		var selectUrl = "/ipad/ks/selectSuppleMentInformation.json";
     	$.ajax({
 		url:wsHost + selectUrl,
@@ -825,6 +896,7 @@ function budcMethod(id){
 		},
 		success: function (json) {
 	    var obj = $.evalJSON(json);
+	    
 	    
     	if(obj.result.maritalStatus=="0"){
 			obj.result.maritalStatus="未婚";
@@ -869,6 +941,7 @@ function budcMethod(id){
 		}else if(obj.result.childEdu=="3"){
 			obj.result.childEdu="工作";
 		}
+		
 	    window.scrollTo(0,0);//滚动条回到顶端
 	    $("#mainPage").html("<div class='title'><img src='images/back.png' onclick='cusbc()'/>快审通-补充调查</div>"+  
 			"<div class='content'>" +
@@ -1038,14 +1111,13 @@ function budcMethod(id){
 			"<td><input  type='text' value='"+obj.result.payPrivateUse+"' disabled='isabled'/> &nbsp;元</td>"+
 			"</tr>"+  
 
-			"</table>"+
-			"<p>" +
-			/*"<input type='button' class='btn btn-primary btn-large' value='查看文件资料' id='save' />" +*/
-			"<input type='button' class='btn btn-large' value='返回' onclick='kssp()'/>" +
-			"</p>"+
+			"</table>"+ body +
 	"</div>");
 	$(".right").hide();
 	$("#mainPage").show();
+	$("#re").click(function(){
+		sHistory(id);
+	});
 	}
 	})
 }
@@ -1113,7 +1185,13 @@ function ksspxq(res){
 	$("#ksspc").click(function(){
 				var number =/^\d+$/;
 				var teje = $("#teje").val();
-				if(teje!=""&&number.test(teje)){
+				if( $("#auditresult").val() == "APPROVE"){
+					if(teje==""||teje==null||!number.test(teje)){
+						window.wxc.xcConfirm("请输入正确的提额金额", "warning");
+						return;
+					}
+				}
+				window.wxc.xcConfirm("确定要保存吗?", "confirm",{onOk:function(){
 					$("#save").attr('disabled',"true");
 					var url ="/ipad/ks/update.json";
 					$.ajax({
@@ -1131,10 +1209,24 @@ function ksspxq(res){
 							kssp();
 						}
 					})
-				}else{
-					window.wxc.xcConfirm("请输入正确的提额金额", "warning");
-				}
+				}});
 	})
 	
+	// change
+	$("#auditresult").change(function (){
+		var status = $("select[name=status]").val();
+		
+		if(status == "APPROVE"){
+			$('#teje').removeAttr('disabled')
+		}
+		
+		if(status == "REJECT"){
+			$("#teje").attr('disabled',"true");
+		}
+		
+		if(status == "SUPINVEST"){
+			$("#teje").attr('disabled',"true");
+		}
+	})
 }
 /********************** 快审  **********************/
