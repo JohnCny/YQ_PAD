@@ -10,11 +10,11 @@ function dl(){
     post.doPost("/ipad/user/JnLogin.json",data,checkLoginCallback,"登陆失败！");*/
 
 //  测试用
-	var user_name = "wangxiaoming";  
-    var pass_word = "111111";
+	//var user_name = "wangxiaoming";  
+    //var pass_word = "111111";
 //  上线用
-  //var user_name = $("#name").val();
- //var pass_word = $("#password").val()
+    var user_name = $("#name").val();
+    var pass_word = $("#password").val();
 	var wsLoginUrl = "/ipad/user/JnLogin.json"+"?login="+user_name+"&password="+pass_word;
     $.ajax({
         url:wsHost + wsLoginUrl,
