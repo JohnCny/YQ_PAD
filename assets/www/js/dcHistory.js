@@ -176,11 +176,11 @@ function sczl3(id,obj,name,type){
 	            var chart=$(this).attr("id");
 	            imageurl=Ima[chart[3]].ID;
 	            	var lltpurl=wsHost+"/ipad/TypadImageBrowse/downLoadYxzlJn.json?id="+imageurl;
-	           	 $("#text").html("<div class='display-div sdhtz' style='width:80%;margin-top:20px;left:10%;'>"+
+	           	 $("#text").html("<div class='display-div sdhtz' style='width:80%;height:100%;margin-top:0px;left:10%;'>"+
 	                        "<div class='dialog-head'>"+
 	                           "<h4>查看大图</h4>"+
 	                        "</div>"+
-	                        "<img src='"+lltpurl+"' style='width:80% ;height:65%; margin-left:10%'/>"+
+	                        "<img src='"+lltpurl+"' style='width:80%;height:80%; margin-left:10%'/>"+
 	                        "<div class='dialog-bottom'>"+
 	                           "<button type='button' class='btn btn-default' onclick='hide_dcts()'>确定</button>"+
 	                        "</div>"+

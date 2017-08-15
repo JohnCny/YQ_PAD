@@ -242,7 +242,7 @@ function aa(res){
 			"<th>性别:</th>"+
 			"<td><input  type='text' value='' disabled='isabled'/></td>"+
 			"<th>身份证号:</th>"+
-			"<td><input  type='text' value='"+res.cardId+"' disabled='isabled'/></td>"+
+			"<td><input  type='text' value='"+res.cardId+"' name='cardId' readonly='readonly'/></td>"+
 			"</tr>"+
 			
 			
@@ -723,7 +723,7 @@ function kssp(){
 				tmp=tmp+"<tr onclick='check(this)'>"+
 				"<td><span class='radio'> <input type='radio' name='checkbox' value='"+obj.result[i].id+"@"+
 				obj.result[i].customerName+"@"+obj.result[i].cardId+"@"+obj.result[i].phoneNo+
-				"@"+obj.result[i].applyAmt+"@"+obj.result[i].loanTerm+"@"+obj.result[i].applyTime+"'/>"+"</span></td>"+ 
+				"@"+obj.result[i].applyAmt+"@"+obj.result[i].loanTerm+"@"+obj.result[i].applyTime+"@"+obj.result[i].creditAmt+"@"+obj.result[i].remarks+"'/>"+"</span></td>"+ 
 				"<td>"+obj.result[i].customerName+"</td>"+
 				"<td>"+obj.result[i].cardId+"</td>"+
 				"<td>"+obj.result[i].phoneNo+"</td>"+
@@ -791,7 +791,7 @@ function kssp(){
 							booo=booo+"<tr onclick='check(this)'>"+
 							"<td><span class='radio'> <input type='radio' name='checkbox' value='"+obj.result[i].id+"@"+
 							obj.result[i].customerName+"@"+obj.result[i].cardId+"@"+obj.result[i].phoneNo+
-							"@"+obj.result[i].applyAmt+"@"+obj.result[i].loanTerm+"@"+obj.result[i].applyTime+"'/>"+"</span></td>"+ 
+							"@"+obj.result[i].applyAmt+"@"+obj.result[i].loanTerm+"@"+obj.result[i].applyTime+"@"+obj.result[i].creditAmt+"@"+obj.result[i].remarks+"'/>"+"</span></td>"+ 
 							"<td>"+obj.result[i].customerName+"</td>"+
 							"<td>"+obj.result[i].cardId+"</td>"+
 							"<td>"+obj.result[i].phoneNo+"</td>"+
@@ -865,6 +865,8 @@ function kssp(){
 					res.applyAmt = values[4];
 					res.loanTerm = values[5];
 					res.applyTime = values[6];
+					res.creditAmt = values[7];
+					res.remarks = values[8];
 				   	ksspxq(res);
 				}else{
 					window.wxc.xcConfirm("请选择一行", "warning");
@@ -1129,16 +1131,13 @@ function ksspxq(res){
 	$("#mainPage").html("<div class='title'><img src='images/back.png' onclick='kssp()'/>快审审批界面</div>"+  
 		    "<div class='content'>" +
 			"<table class='cpTable khjbxx' style='margin-top:20px;'>"+
-			"<tr><th colspan='4'>模型评估结果</th></tr>"+  
+			"<tr><th colspan='4'>模型评估结果</th></tr>"+ 
+			 
 			"<tr>"+
-			"<th>评估结果:</th>"+
-			"<td><input  type='text' value='通过' disabled='isabled'/></td>"+
 			"<th>评估金额(元):</th>"+
-			"<td><input  type='text' value='20000' disabled='isabled'/></td>"+
-			"</tr>"+
-			"<tr>"+
-			"<th>拒绝原因:</th>"+
-			"<td><input  type='text' value='' disabled='isabled'/></td>"+
+			"<td><input  type='text' value='"+res.creditAmt+"' disabled='isabled'/></td>"+
+			"<th>描述:</th>"+
+			"<td><input  type='text' value='"+res.remarks+"' disabled='isabled'/></td>"+
 			"</tr>"+
 			
 	
