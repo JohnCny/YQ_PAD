@@ -4,7 +4,7 @@
     android:versionCode="1"
     android:versionName="1.0" >
 
-    <uses-sdk android:minSdkVersion="10" />
+    <uses-sdk android:minSdkVersion="8" />
 
     <supports-screens
         android:anyDensity="true"
@@ -79,13 +79,10 @@
             android:value="5IrVaVkDmtBKwFuwhQk9F2CFXdhGFUxR" />
         
         
-	<activity
-            android:name=".SendActivity"
-            android:label="@string/title_activity_send" >
-        </activity>
 	
-        <activity android:name="PluginIDCaptureActivity"></activity>
-        <activity android:name="PluginIDCaptureTanwhActivity"></activity>
+	
+        <!-- <activity android:name="PluginIDCaptureActivity"></activity>
+        <activity android:name="PluginIDCaptureTanwhActivity"></activity> -->
     </application>
 
 </manifest>

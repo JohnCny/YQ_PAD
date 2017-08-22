@@ -2,16 +2,6 @@
 //我的首页
 function mywdsy(){
 	window.scrollTo(0,0);//滚动条回到顶端
-//	alert("GET当前登录用户ID："+window.sessionStorage.getItem("userId"));
-//	$("#mainPage").html("<div class='title'>我的首页</div>"+ 
-//			"<div class='contents' id='allmap'  style='text-align:center;height:580px;margin:auto auto;'>" +
-//			"<div class='spinner'>"+
-//			"<div class='bounce1'></div>"+
-//			"<div class='bounce2'></div>"+
-//			"<div class='bounce3'></div>"+
-//			"</div>"+
-//			"</div>"+
-//	"</div>");
 	var get = crud.dom.factory("GET");
 	wsCustManager ="/ipad/user/findSysUserMsg.json";
 	var url = wsCustManager+"?userId="+window.sessionStorage.getItem("userId");
@@ -37,6 +27,7 @@ function mywdsy(){
 		if(window.sessionStorage.getItem("LocationType")=="H5"){
 			locationType="<div class='box wdsy5' onclick='wzxx()'><img src='images/wdzj.png'/><span>位置信息</span></div>"
 		}
+		
 		var zhiwei="客户经理";
 		if(window.sessionStorage.getItem("userType")==5){
 			zhiwei="风险岗";
@@ -49,6 +40,7 @@ function mywdsy(){
 		}else if(window.sessionStorage.getItem("userType")==2){
 			zhiwei="部门主管";
 		}
+		
 		var content = "<div class='title'>我的首页</div>"+ 
 		"<div class='content'>" +
 		"<div class='user-info'>" +
@@ -60,44 +52,17 @@ function mywdsy(){
 		"<p>所属银行："+objs.result.org+"</p>"+
 		"<p>客户经理编号："+objs.result.externalId+"</p>"+
 		"<p>职位："+zhiwei+"</p>"+
-		/*"<p>授信权限：50万</p>"+*/
-//		"<p>放款总额：100万</p>"+
 		"</div>"+
-		"<div class='box wdsy1' onclick='mycpgl()'><img src='images/clkh.png'/><span>产品查询</span></div>"+
-		"<div class='box wdsy2' onclick='khjjxx();pie()'><img src='images/khjjxx.png'/><span>客户进件信息</span></div>"+
-		"<div class='box wdsy3' onclick='khyyzk()'><img src='images/khyyzk.png'/><span>客户运营状况</span></div>"+
-		im+
-		"<div class='box wdsy5' onclick ='jljlxx()'><img src='images/jljlxx.png'/><span>奖励激励信息</span></div>"+ 
-		locationType+
 		"</div>";
+		
 		$("#mainPage").html(content);
 		$("#nimei").html("上次登录时间：<br/>"+objs.LastLogin);
 		$(".right").hide();
 		$("#mainPage").show();
 	}
-
-	/*$("#mainPage").html("<div class='title'>我的首页</div>"+  
-                        "<div class='content'>" +
-                            "<div class='user-info'>" +
-                                "<img src='images/sq.jpg'/>"+
-                                "<p class='h2'>客户经理信息</p>"+
-                                "<p>姓名：杨景琳</p>"+
-                                "<p>性别：女</p>"+
-                                "<p>年龄：36岁</p>"+
-                                "<p>所属银行：济南农商行总行</p>"+
-                                "<p>客户经理编号：01010419</p>"+
-                                "<p>职位：客户经理主管</p>"+
-                                "<p>授信权限：50万</p>"+
-                                "<p>放款总额：100万</p>"+
-                            "</div>"+
-                            "<div class='box wdsy1' onclick='mycpgl()'><img src='images/clkh.png'/><span>产品查询</span></div>"+
-                            "<div class='box wdsy2' onclick='khjjxx();pie()'><img src='images/khjjxx.png'/><span>客户进件信息</span></div>"+
-                            "<div class='box wdsy3' onclick='khyyzk()'><img src='images/khyyzk.png'/><span>客户运营状况</span></div>"+
-                            "<div class='box wdsy4' onclick='tz()'><img src='images/tz.png'/><span>通知</span></div>"+
-                            "<div class='box wdsy5' onclick='edpggj()'><img src='images/jljlxx.png'/><span>额度评估工具</span></div>"+                           
-                        "</div>");*/
-	
 }
+
+
 //function xxxxx(){
 //	window.plugins.GpsToBd09llPlugin.startActivity(succs,wrongs,"","get");
 ////	window.location.href="file:///android_asset/www/map.html";
