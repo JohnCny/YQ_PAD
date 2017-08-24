@@ -1,14 +1,22 @@
 /* ********************* maoya 开始  ********************* */
 //加载提额管理界面
 function kdjj(){
-    var htmDiv="";
-    var htmlDiv="";
-    var th="";
+	var htDiv = "";
+    var htmDiv = "";
+    var htmlDiv = "";
+    var th = "";
    
 	// 客户经理
 	if(window.sessionStorage.getItem("userType")==1){
        htmlDiv = "<div class='box shspp1' onclick='cusbc()'><img src='images/shsp1.png'/>" +                            
 				 "<span>提额申请</span>"+
+				 "</div>"
+	}
+	
+	// 客户经理  
+	if(window.sessionStorage.getItem("userType")==1){
+       htDiv = "<div class='box shspp1' onclick='qd()'><img src='images/shsp1.png'/>" +                            
+				 "<span>抢单查询</span>"+
 				 "</div>"
 	}
 	
@@ -19,21 +27,178 @@ function kdjj(){
 				"</div>"
 	}
 	
+	// 模型测试
 	if(window.sessionStorage.getItem("userType")==4){
        th = "<div class='box shspp1' onclick='modelinput()'><img src='images/shsp2.png'/>" +
 				"<span>模型</span>"+
 				"</div>"
 	}
 	
-	window.scrollTo(0,0);//滚动条回到顶端
+	window.scrollTo(0,0);
 	$("#mainPage").html("<div class='title'>快审通-待调查进件</div>"+  
-			"<div class='content'>" + htmlDiv + htmDiv +th+
+			"<div class='content'>" + htDiv + htmlDiv + htmDiv +
 	"</div>");
 	$(".right").hide();
 	$("#mainPage").show();
 }
 
-//提额申请查询
+// 抢单查询
+function qd(){
+	var sdrwurl= "/ipad/Customer/selectOrder.json";
+	var userId = window.sessionStorage.getItem("userId");
+	var tmp ="";
+	var result={};
+	var page=1;
+	var j = 1;
+	var head ="<tr>"+                         
+	"<th></th>"+                 
+	"<th>客户名称</th>"+  
+	"<th>身份证号码</th>"+
+	"<th>手机号</th>"+
+	"<th>初始额度(元)</th>"+
+	"<th>申请时间</th>"+
+	"</tr>"
+	$.ajax({
+		url:wsHost+sdrwurl,
+		type: "GET",
+		dataType:'json',
+		success: function (json){
+			var obj = $.evalJSON(json);
+			for(var i = 0;i<obj.size;i++){
+				tmp=tmp+"<tr onclick='check(this)'><td><span class='radio'> <input type='radio' name='checkbox' value='"+obj.result[i].ID+"@"+
+				obj.result[i].CUSTOMER_NAME+"@"+obj.result[i].CARD_ID+"@"+obj.result[i].PHONE_NO+
+				"@"+obj.result[i].APPLY_AMT+"@"+obj.result[i].LOAN_TERM+"@"+obj.result[i].AGE+"@"+obj.result[i].SEX+"'/>"+"</span></td>"+  
+				"<td>"+obj.result[i].CUSTOMER_NAME+"</td>"+
+				"<td>"+obj.result[i].CARD_ID+"</td>"+
+				"<td>"+obj.result[i].PHONE_NO+"</td>"+
+				"<td>"+obj.result[i].APPLY_AMT+"</td>"+
+				"<td>"+obj.result[i].APPLY_TIME+"</td></tr>"
+
+				if((i+1)%5==0){
+					result[j]=tmp;
+					j++;
+					tmp="";
+				}
+			}
+
+			result[j]=tmp;
+			window.scrollTo(0,0);
+			$("#mainPage").html("<div class='title'><img src='images/back.png' onclick='kdjj()'/>新申请客户</div>"+  
+					"<div class='content' >"+ 
+					"<p style='margin-bottom:10px;margin-top:10px;'>"+
+					"<span style='float:left; margin-top:10px; margin-bottom:10px; margin-left:30px;'>客户姓名:<input type ='text' id='chineseName'/></span>"+
+					"<input type='button' style='margin-bottom:10px; margin-top:10px;' class='btn btn-large btn-primary next' value='筛选' id ='sure'/></p>"+
+					"<table id='cslb' class='cpTable jjTable' style='text-align:center;'>"+
+					head+result[page]+
+					"</table>"+
+					"<p><input type='button' class='btn btn-large btn-primary' value='上一页' id = 'syy' />"+
+					"<input type='button' class='btn btn-large btn-primary' value='下一页' id = 'xyy'/>"+
+					"<input type='button' class='btn btn-primary btn-large' value='抢单' id='qdd'/>"+
+					"<input type='button' class='btn btn-large' value='返回' onclick='kdjj()'/></p>"+
+			"</div>");
+			$(".right").hide();
+			$("#mainPage").show();
+			
+			
+			// 筛选
+			$("#sure").click(function(){
+			  if($("#chineseName").val()==""){
+			  	window.wxc.xcConfirm("查询条件客户姓名必输", "warning");
+			  	return;
+			  }
+			 	$.ajax({
+					url:wsHost + sdrwurl,
+					type: "GET",
+					dataType:'json',
+					data:{
+						chineseName:$("#chineseName").val(),
+					},
+					success: function (json) {
+						obj = $.evalJSON(json);
+						var booo="";
+						for(var i = 0;i<obj.size;i++){
+							booo=booo+"<tr onclick='check(this)'><td><span class='radio'> <input type='radio' name='checkbox' value='"+obj.result[i].ID+"@"+
+							obj.result[i].CUSTOMER_NAME+"@"+obj.result[i].CARD_ID+"@"+obj.result[i].PHONE_NO+
+							"@"+obj.result[i].APPLY_AMT+"@"+obj.result[i].LOAN_TERM+"@"+obj.result[i].AGE+"@"+obj.result[i].SEX+"'/>"+"</span></td>"+  
+							"<td>"+obj.result[i].CUSTOMER_NAME+"</td>"+
+							"<td>"+obj.result[i].CARD_ID+"</td>"+
+							"<td>"+obj.result[i].PHONE_NO+"</td>"+
+							"<td>"+obj.result[i].APPLY_AMT+"</td>"+
+							"<td>"+obj.result[i].APPLY_TIME+"</td></tr>"
+						}
+							$("#cslb").html(head+booo);
+						}
+					})
+			})   
+			
+			// 上一页
+			$("#xyy").click(function(){
+				page=page+1;
+				if(result[page]){
+					$("#cslb").html(head+result[page]);
+				}else{
+					window.wxc.xcConfirm("当前已经是最后一页", "info");
+					page=page-1;
+				}
+			})
+			
+			// 下一页
+			$("#syy").click(function(){
+				page=page-1; 
+				if(result[page]){
+					$("#cslb").html(head+result[page]);
+				}else{
+					window.wxc.xcConfirm("当前已经是第一页", "info");
+					page = page+1;
+				}
+			})
+			
+			// 抢单
+			// save
+			$("#qdd").click(function(){
+				if ($("input[type='radio']").is(':checked')) {
+						var values =$('input[name="checkbox"]:checked').attr("value").split("@");
+						window.wxc.xcConfirm("确定要抢单吗?", "confirm",{onOk:function(){
+							$("#qdd").attr('disabled',"true");
+							var url ="/ipad/ks/grabOrder.json";
+							$.ajax({
+								url:wsHost+url,
+								dateType:'json',
+								type:'GET',
+								data:{
+									order:values[0],
+									customerManagerId:userId,
+									cardId:values[2],
+								},
+								success:function(json){
+									var mes = $.evalJSON(json);
+									//alert(mes.result.status);
+									//alert(mes.result.reason);
+									if(mes.result.status == 'fail'){
+										window.wxc.xcConfirm(mes.result.reason, "error");
+										qd();
+									}else{
+										window.wxc.xcConfirm(mes.result.reason, "success");
+										qd();
+									}
+								},  
+					         	error : function(json) {  
+					         		window.wxc.xcConfirm(mes.reason, "error");
+					         	}  
+							})
+						}});
+				 }else{
+					window.wxc.xcConfirm("请选择一行", "error");
+				 }
+			})
+			
+			
+		}})
+}
+
+
+
+// 提额申请查询
 function cusbc(){
 	var sdrwurl= "/ipad/Customer/selectSqCustomer.json";
 	var userId = window.sessionStorage.getItem("userId");
@@ -42,6 +207,7 @@ function cusbc(){
 	var page=1;
 	var j = 1;
 	var td="";
+	var dh="";
 	var head ="<tr>"+                         
 	"<th></th>"+                 
 	"<th>客户名称</th>"+  
@@ -127,21 +293,22 @@ function cusbc(){
 					dataType:'json',
 					data:{
 						chineseName:$("#chineseName").val(),
+						userId:userId,
 					},
 					success: function (json) {
 						obj = $.evalJSON(json);
 						var booo="";
 						for(var i = 0;i<obj.size;i++){
 							if(obj.result[i].loanState=="0"){
-								obj.result[i].loanState="待调查";
+								dh="待调查";
 							}else if(obj.result[i].loanState=="1"){
-								obj.result[i].loanState="补充调查";
+								dh="补充调查";
 							}else if(obj.result[i].loanState=="2"){
-								obj.result[i].loanState="快审中";
+								dh="快审中";
 							}else if(obj.result[i].loanState=="3"){
-								obj.result[i].loanState="通过";
+								dh="通过";
 							}else if(obj.result[i].loanState=="4"){
-								obj.result[i].loanState="拒绝";
+								dh="拒绝";
 							}
 							booo=booo+"<tr onclick='check(this)'><td><span class='radio'> <input type='radio' name='checkbox' value='"+obj.result[i].ID+"@"+
 							obj.result[i].CUSTOMER_NAME+"@"+obj.result[i].CARD_ID+"@"+obj.result[i].PHONE_NO+
@@ -152,7 +319,7 @@ function cusbc(){
 							"<td>"+obj.result[i].APPLY_AMT+"</td>"+
 							//"<td>"+obj.result[i].LOAN_TERM+"</td>"+
 							"<td>"+obj.result[i].APPLY_TIME+"</td>"+			
-							"<td>"+td+"</td></tr>"
+							"<td>"+dh+"</td></tr>"
 						}
 							$("#cslb").html(head+booo);
 						}
@@ -179,14 +346,7 @@ function cusbc(){
 			})
 
 			$("#csjl").click(function() {
-				if ($("input[type='radio']").is(':checked')) {
-
-					var values =$('input[name="checkbox"]:checked').attr("value").split("@");
-					var id = values[0];
-					sHistory(id);
-				}else{
-					window.wxc.xcConfirm("请选择一行", "warning");
-				}
+				findHistory();
 			})
 			$("#xsyxzl").click(function() {
 				if ($("input[type='radio']").is(':checked')) {
@@ -234,7 +394,7 @@ function aa(res){
 			"<tr>"+
 			"<th>申请人姓名:</th>"+
 			"<td><input  type='hidden' value='"+res.appId+"' name='applyId'/><input  type='text' value='"+res.name+"' disabled='isabled'/></td>"+
-			"<th>当前金额:</th>"+
+			"<th>当前额度:</th>"+
 			"<td><input  type='text' value='"+res.applyAmt+"' disabled='isabled'/>&nbsp;元</td>"+
 			"</tr>"+
 			
@@ -513,6 +673,179 @@ function sHistory(id){
 }
 
 
+/* ********************* 调查历史  update 20170823********************* */
+function findHistory(){
+	var sdrwurl= "/ipad/Customer/selectSqCustomerHistory.json";
+	var userId = window.sessionStorage.getItem("userId");
+	var tmp ="";
+	var result={};
+	var page=1;
+	var j = 1;
+	var td="";
+	var dh="";
+	var head ="<tr>"+                         
+	"<th></th>"+                 
+	"<th>客户名称</th>"+  
+	"<th>身份证号码</th>"+
+	"<th>手机号</th>"+
+	"<th>初始额度(元)</th>"+
+	//"<th>申请期限</th>"+
+	"<th>申请时间</th>"+
+	"<th>审批额度(元)</th>"+
+	"<th>审批时间</th>"+
+	"<th>状态</th>"+ 
+	"</tr>"
+	$.ajax({
+		url:wsHost+sdrwurl,
+		type: "GET",
+		dataType:'json',
+		data:{
+			userId:userId,
+		},
+		success: function (json){
+			var obj = $.evalJSON(json);
+			for(var i = 0;i<obj.size;i++){
+				if(obj.result[i].LOAN_STATE=="0"){
+					td="待调查";
+				}else if(obj.result[i].LOAN_STATE=="1"){
+					td="补充调查";
+				}else if(obj.result[i].LOAN_STATE=="2"){
+					td="快审中";
+				}else if(obj.result[i].LOAN_STATE=="3"){
+					td="通过";
+				}else if(obj.result[i].LOAN_STATE=="4"){
+					td="拒绝";
+				}
+				tmp=tmp+"<tr onclick='check(this)'><td><span class='radio'> <input type='radio' name='checkbox' value='"+obj.result[i].ID+"@"+
+				obj.result[i].CUSTOMER_NAME+"@"+obj.result[i].CARD_ID+"@"+obj.result[i].PHONE_NO+
+				"@"+obj.result[i].APPLY_AMT+"@"+obj.result[i].LOAN_TERM+"@"+obj.result[i].AGE+"@"+obj.result[i].SEX+"'/>"+"</span></td>"+  
+				"<td>"+obj.result[i].CUSTOMER_NAME+"</td>"+
+				"<td>"+obj.result[i].CARD_ID+"</td>"+
+				"<td>"+obj.result[i].PHONE_NO+"</td>"+
+				"<td>"+obj.result[i].APPLY_AMT+"</td>"+
+				//"<td>"+obj.result[i].LOAN_TERM+"</td>"+
+				"<td>"+obj.result[i].APPLY_TIME+"</td>"+
+				"<td>"+obj.result[i].AUDIT_AMT+"</td>"+
+				"<td>"+obj.result[i].AUDIT_TIME+"</td>"+			
+				"<td>"+td+"</td></tr>"
+
+				if((i+1)%5==0){
+					result[j]=tmp;
+					j++;
+					tmp="";
+				}
+			}
+
+			result[j]=tmp;
+
+			window.scrollTo(0,0);//滚动条回到顶端
+			$("#mainPage").html("<div class='title'><img src='images/back.png' onclick='cusbc()'/>快审通-调查历史</div>"+  
+					"<div class='content' >"+ 
+					"<p style='margin-bottom:10px;margin-top:10px;'>"+
+					"<span style='float:left; margin-top:10px; margin-bottom:10px; margin-left:30px;'>客户姓名:<input type ='text' id='chineseName'/></span>"+
+					"<input type='button' style='margin-bottom:10px; margin-top:10px;' class='btn btn-large btn-primary next' value='筛选' id ='sure'/></p>"+
+					"<table id='cslb' class='cpTable jjTable' style='text-align:center;'>"+
+					head+result[page]+
+					"</table>"+
+					"<p><input type='button' class='btn btn-large btn-primary' value='上一页' id = 'syy' />"+
+					"<input type='button' class='btn btn-large btn-primary' value='下一页' id = 'xyy'/>"+
+					"<input type='button' class='btn btn-primary btn-large' value='补充调查资料查看' id ='xszlxx'/>"+
+					"<input type='button' class='btn btn-primary btn-large' value='上传资料查看' id ='xsyxzl'/>"+
+					"<input type='button' class='btn btn-large' value='返回' onclick='cusbc()'/></p>"+
+			"</div>");
+			$(".right").hide();
+			$("#mainPage").show();
+			
+			
+			// 筛选
+			$("#sure").click(function(){
+			  if($("#chineseName").val()==""){
+			  	window.wxc.xcConfirm("查询条件客户姓名必输", "warning");
+			  	return;
+			  }
+			 	$.ajax({
+					url:wsHost + sdrwurl,
+					type: "GET",
+					dataType:'json',
+					data:{
+						chineseName:$("#chineseName").val(),
+						userId:userId,
+					},
+					success: function (json) {
+						obj = $.evalJSON(json);
+						var booo="";
+						for(var i = 0;i<obj.size;i++){
+						if(obj.result[i].LOAN_STATE=="0"){
+							dh="待调查";
+						}else if(obj.result[i].LOAN_STATE=="1"){
+							dh="补充调查";
+						}else if(obj.result[i].LOAN_STATE=="2"){
+							dh="快审中";
+						}else if(obj.result[i].LOAN_STATE=="3"){
+							dh="通过";
+						}else if(obj.result[i].LOAN_STATE=="4"){
+							dh="拒绝";
+						}
+							booo=booo+"<tr onclick='check(this)'><td><span class='radio'> <input type='radio' name='checkbox' value='"+obj.result[i].ID+"@"+
+							obj.result[i].CUSTOMER_NAME+"@"+obj.result[i].CARD_ID+"@"+obj.result[i].PHONE_NO+
+							"@"+obj.result[i].APPLY_AMT+"@"+obj.result[i].LOAN_TERM+"@"+obj.result[i].AGE+"@"+obj.result[i].SEX+"'/>"+"</span></td>"+  
+							"<td>"+obj.result[i].CUSTOMER_NAME+"</td>"+
+							"<td>"+obj.result[i].CARD_ID+"</td>"+
+							"<td>"+obj.result[i].PHONE_NO+"</td>"+
+							"<td>"+obj.result[i].APPLY_AMT+"</td>"+
+							//"<td>"+obj.result[i].LOAN_TERM+"</td>"+
+							"<td>"+obj.result[i].APPLY_TIME+"</td>"+
+							"<td>"+obj.result[i].AUDIT_AMT+"</td>"+
+							"<td>"+obj.result[i].AUDIT_TIME+"</td>"+			
+							"<td>"+dh+"</td></tr>"
+						}
+							$("#cslb").html(head+booo);
+						}
+					})
+			})   
+
+			$("#xyy").click(function(){
+				page=page+1;
+				if(result[page]){
+					$("#cslb").html(head+result[page]);
+				}else{
+					window.wxc.xcConfirm("当前已经是最后一页", "info");
+					page=page-1;
+				}
+			})
+			$("#syy").click(function(){
+				page=page-1; 
+				if(result[page]){
+					$("#cslb").html(head+result[page]);
+				}else{
+					window.wxc.xcConfirm("当前已经是第一页", "info");
+					page = page+1;
+				}
+			})
+			
+			$("#xszlxx").click(function() {
+				if ($("input[type='radio']").is(':checked')) {
+					var values =$('input[name="checkbox"]:checked').attr("value").split("@");
+					budcMethod(values[0],"1");
+				}else{
+					window.wxc.xcConfirm("请选择一行", "warning");
+				}
+			});
+			
+			
+			$("#xsyxzl").click(function() {
+				if ($("input[type='radio']").is(':checked')) {
+					var values =$('input[name="checkbox"]:checked').attr("value").split("@");
+					HistoryIma(values[0],"1");
+				}else{
+					window.wxc.xcConfirm("请选择一行", "warning");
+				}
+			});
+
+			
+			
+		}})
+}
 
 
 
@@ -711,6 +1044,9 @@ function kssp(){
 		url:wsHost + ksurl,
 		type: "GET",
 		dataType:'json',
+		data:{
+			userId:userId,
+		},
 		success: function (json) {
 			obj = $.evalJSON(json);
 			for(var i = 0;i<obj.size;i++){
@@ -731,7 +1067,7 @@ function kssp(){
 				tmp=tmp+"<tr onclick='check(this)'>"+
 				"<td><span class='radio'> <input type='radio' name='checkbox' value='"+obj.result[i].id+"@"+
 				obj.result[i].customerName+"@"+obj.result[i].cardId+"@"+obj.result[i].phoneNo+
-				"@"+obj.result[i].applyAmt+"@"+obj.result[i].loanTerm+"@"+obj.result[i].applyTime+"@"+obj.result[i].creditAmt+"@"+obj.result[i].remarks+"'/>"+"</span></td>"+ 
+				"@"+obj.result[i].applyAmt+"@"+obj.result[i].loanTerm+"@"+obj.result[i].applyTime+"@"+obj.result[i].creditAmt+"@"+obj.result[i].remarks+"@"+obj.result[i].quotaId+"'/>"+"</span></td>"+ 
 				"<td>"+obj.result[i].customerName+"</td>"+
 				"<td>"+obj.result[i].cardId+"</td>"+
 				"<td>"+obj.result[i].phoneNo+"</td>"+
@@ -778,6 +1114,7 @@ function kssp(){
 					dataType:'json',
 					data:{
 						chineseName:$("#chineseName").val(),
+						userId:userId,
 					},
 					success: function (json) {
 						obj = $.evalJSON(json);
@@ -799,7 +1136,7 @@ function kssp(){
 							booo=booo+"<tr onclick='check(this)'>"+
 							"<td><span class='radio'> <input type='radio' name='checkbox' value='"+obj.result[i].id+"@"+
 							obj.result[i].customerName+"@"+obj.result[i].cardId+"@"+obj.result[i].phoneNo+
-							"@"+obj.result[i].applyAmt+"@"+obj.result[i].loanTerm+"@"+obj.result[i].applyTime+"@"+obj.result[i].creditAmt+"@"+obj.result[i].remarks+"'/>"+"</span></td>"+ 
+							"@"+obj.result[i].applyAmt+"@"+obj.result[i].loanTerm+"@"+obj.result[i].applyTime+"@"+obj.result[i].creditAmt+"@"+obj.result[i].remarks+"@"+obj.result[i].quotaId+"'/>"+"</span></td>"+ 
 							"<td>"+obj.result[i].customerName+"</td>"+
 							"<td>"+obj.result[i].cardId+"</td>"+
 							"<td>"+obj.result[i].phoneNo+"</td>"+
@@ -875,6 +1212,7 @@ function kssp(){
 					res.applyTime = values[6];
 					res.creditAmt = values[7];
 					res.remarks = values[8];
+					res.quotaId = values[9];
 				   	ksspxq(res);
 				}else{
 					window.wxc.xcConfirm("请选择一行", "warning");
@@ -953,7 +1291,7 @@ function budcMethod(id,type){
 		}
 		
 	    window.scrollTo(0,0);//滚动条回到顶端
-	    $("#mainPage").html("<div class='title'><img src='images/back.png' onclick='cusbc()'/>快审通-补充调查</div>"+  
+	    $("#mainPage").html("<div class='title'><img src='images/back.png' id='pre'/>快审通-补充调查</div>"+  
 			"<div class='content'>" +
 			"<table class='cpTable khjbxx' style='margin-top:20px;'>"+
 			
@@ -961,7 +1299,7 @@ function budcMethod(id,type){
 			"<tr>"+
 			"<th>申请人姓名:</th>"+
 			"<td><input  type='text' value='"+obj.result.customerName+"' disabled='isabled'/></td>"+
-			"<th>当前金额:</th>"+
+			"<th>当前额度:</th>"+
 			"<td><input  type='text' value='"+obj.result.applyAmt+"' disabled='isabled'/>&nbsp;元</td>"+
 			"</tr>"+
 			
@@ -1126,7 +1464,14 @@ function budcMethod(id,type){
 	$(".right").hide();
 	$("#mainPage").show();
 	$("#re").click(function(){
-		sHistory(id);
+		findHistory();
+	});
+	$("#pre").click(function(){
+	  if(type == "1"){
+		findHistory();
+	  }else{
+		kssp();
+	  }
 	});
 	}
 	})
@@ -1199,7 +1544,7 @@ function ksspxq(res){
 					}
 				}
 				window.wxc.xcConfirm("确定要保存吗?", "confirm",{onOk:function(){
-					$("#save").attr('disabled',"true");
+					$("#ksspc").attr('disabled',"true");
 					var url ="/ipad/ks/update.json";
 					$.ajax({
 						url:wsHost+url,
@@ -1207,6 +1552,7 @@ function ksspxq(res){
 						type:'GET',
 						data:{
 							appId:res.id,
+							quotaId:res.quotaId,
 							status:$("#auditresult").val(),
 							amt:$("#teje").val(),
 						},

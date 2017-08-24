@@ -105,7 +105,7 @@ function HistoryIma(id,type){
 	});
 	$("#back").click(function(){
 	  if(type == "1"){
-		sHistory(id);
+		findHistory();
 	  }else{
 		kssp();
 	  }
